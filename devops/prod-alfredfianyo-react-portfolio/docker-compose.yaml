@@ -1,0 +1,30 @@
+version: "3.6"
+services:
+  alfredfianyo-react-portfolio:
+    build:
+      context: $PWD/../..
+      dockerfile: $PWD/alfredfianyo-react-portfolio/Dockerfile
+    restart: always
+    expose:
+      - "80"
+      - "443"
+    environment:
+      - VIRTUAL_HOST=alfredfianyo.com, www.alfredfianyo.com
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=alfredfianyo.com, www.alfredfianyo.com
+      - LETSENCRYPT_EMAIL=alfredfianyo50@gmail.com
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    expose:
+      - 80
+    depends_on:
+      - alfredfianyo-react-portfolio
+    links:
+      - alfredfianyo-react-portfolio
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
